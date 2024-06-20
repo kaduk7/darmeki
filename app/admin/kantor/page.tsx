@@ -85,7 +85,7 @@ const Kantor = () => {
   return (
     <div>
       <div className="row">
-        <div className="col-md-6 grid-margin stretch-card">
+        <div className="col-md-7 grid-margin stretch-card">
           <div className="card">
             <div className="card-header">
               <h1 className="card-title" >Profil Perusahaan</h1>

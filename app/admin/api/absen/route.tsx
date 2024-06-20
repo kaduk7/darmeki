@@ -21,18 +21,27 @@ export const POST = async (request: Request) => {
 
 }
 
+// export const GET = async () => {
+//     const absen = await prisma.absensiTb.findMany({
+        
+//         include: {
+//             KaryawanTb: true
+//         },
+//         // orderBy: {
+//         //     KaryawanTb:{
+//         //         nama:'asc'
+//         //     },
+//         // },
+//     });
+//     return NextResponse.json(absen, { status: 200 })
+// }
+
 export const GET = async () => {
-    const absen = await prisma.absensiTb.findMany({
+    const absen = await prisma.karyawanTb.findMany({
         
         include: {
-            KaryawanTb: true
+            AbsensiTb: true
         },
-        // orderBy: {
-        //     KaryawanTb:{
-        //         nama:'asc'
-        //     },
-        // },
     });
     return NextResponse.json(absen, { status: 200 })
 }
-

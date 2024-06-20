@@ -1,40 +1,11 @@
 "use client"
 import React, { useState, useEffect } from 'react';
 import DataTable from 'react-data-table-component';
-import { ambiljamindo, ambiltanggalindo, formattanggaljakarta, mingguDepan, tanggalHariIni, tanggalIndo, warnastatus } from "@/app/helper";
+import { ambiljamindo, ambiltanggalindo, formattanggaljakarta, mingguDepan, tanggalHariIni, warnastatus } from "@/app/helper";
 import * as XLSX from 'xlsx';
 import moment from "moment";
 import 'moment/locale/id';
 moment.locale('id');
-
-const processAbsensi = (data:any) => {
-  const masukRecords = data.filter((item:any) => item.keterangan === 'Masuk');
-  const pulangRecords = data.filter((item:any) => item.keterangan === 'Pulang');
-
-  const combinedRecords = [...masukRecords, ...pulangRecords].reduce((acc, item) => {
-    const key = `${item.karyawanId}-${new Date(item.createdAt).toLocaleDateString()}`;
-    if (!acc[key]) {
-      acc[key] = {
-        karyawanId: item.karyawanId,
-        tanggal: new Date(item.createdAt).toLocaleDateString(),
-        masuk: null,
-        pulang: null,
-      };
-    }
-    if (item.keterangan === 'Masuk') {
-      if (!acc[key].masuk || new Date(item.createdAt) < new Date(acc[key].masuk.createdAt)) {
-        acc[key].masuk = item;
-      }
-    } else if (item.keterangan === 'Pulang') {
-      if (!acc[key].pulang || new Date(item.createdAt) > new Date(acc[key].pulang.createdAt)) {
-        acc[key].pulang = item;
-      }
-    }
-    return acc;
-  }, {});
-
-  return Object.values(combinedRecords);
-};
 
 const processMasuk = (data: any) => {
   const filteredRecords = data.filter((item: any) => item.keterangan === 'Masuk');
@@ -75,7 +46,7 @@ const Absen = () => {
 
   const reload = async () => {
     try {
-      const response = await fetch(`/admin/api/absen`);
+      const response = await fetch(`/master/api/absen`);
       const result = await response.json();
 
 
@@ -92,8 +63,8 @@ const Absen = () => {
         return 0;
       });
 
-      setDataAbsen(result);
-      setDataawal(result);
+      setDataAbsen(combinedData);
+      setDataawal(combinedData);
 
     } catch (error) {
       console.error('Error fetching data:', error);
@@ -106,7 +77,7 @@ const Absen = () => {
   };
 
   const filteredItems = dataabsen.filter(
-    (item: any) => item.nama && item.nama.toLowerCase().includes(filterText.toLowerCase()),
+    (item: any) => item.KaryawanTb.nama && item.KaryawanTb.nama.toLowerCase().includes(filterText.toLowerCase()),
   );
 
   console.log('urutan', filteredItems)
@@ -118,80 +89,44 @@ const Absen = () => {
       sortable: false,
       width: '80px'
     },
-    {
-      name: 'Nama',
-      selector: (row: any) => row.nama,
-      sortable: true,
-      width: '300px'
-    },
+    // {
+    //   name: 'Nama',
+    //   selector: (row: any) => row.KaryawanTb.nama,
+    //   sortable: true,
+    //   width: '300px'
+    // },
     {
       name: 'Tanggal',
-      cell: (row:any) => (
-        <div>
-          {processAbsensi(row.AbsensiTb).map((absen:any, index) => (
-             <div key={index} style={{ marginBottom: '8px' }}>
-             {absen.masuk && (
-              <p style={{ padding: '4px', borderRadius: '4px' }}>
-                 {tanggalIndo(absen.masuk.createdAt)}
-               </p>
-             )}
-             {absen.pulang && (
-              <p style={{ padding: '4px', borderRadius: '4px' }}>
-                 {tanggalIndo(absen.pulang.createdAt)}
-               </p>
-             )}
-           </div>
-          ))}
-        </div>
-      ),
-      sortable: false,
+      selector: (row: any) => ambiltanggalindo(row.createdAt),
     },
     {
       name: 'Jam',
-      cell: (row:any) => (
-        <div>
-          {processAbsensi(row.AbsensiTb).map((absen:any, index) => (
-             <div key={index} style={{ marginBottom: '8px' }}>
-             {absen.masuk && (
-               <p style={{ padding: '4px', borderRadius: '4px' }}>
-                 {ambiljamindo(absen.masuk.createdAt)}
-               </p>
-             )}
-             {absen.pulang && (
-              <p style={{ padding: '4px', borderRadius: '4px' }}>
-                 {ambiljamindo(absen.pulang.createdAt)}
-               </p>
-             )}
-           </div>
-          ))}
-        </div>
-      ),
-      sortable: false,
+      selector: (row: any) => ambiljamindo(row.createdAt),
+
     },
     {
       name: 'Keterangan',
-      cell: (row:any) => (
-        <div>
-          {processAbsensi(row.AbsensiTb).map((absen:any, index) => (
-            <div key={index} style={{ marginBottom: '8px' }}>
-            {absen.masuk && (
-                <p style={{ backgroundColor: '#00ff8c',padding: '4px', borderRadius: '4px' }}>
-                   {absen.masuk.keterangan}
-                </p>
-              )}
-            {absen.pulang && (
-                <p style={{ backgroundColor: '#ffa500',padding: '4px', borderRadius: '4px' }}>
-                  {absen.pulang.keterangan}
-                </p>
-              )}
-          </div>
-          ))}
-        </div>
-      ),
-      sortable: false,
-      width: '400px'
+      selector: (row: any) => row.keterangan,
     },
-    
+
+    // {
+    //   name: 'Keterangan',
+    //   selector: (row: any) => row.keterangan,
+    //   cell: (row: any) => (
+    //     <div
+    //       style={{
+    //         backgroundColor: warnastatus(row.keterangan),
+    //         padding: '8px',
+    //         borderRadius: '4px',
+    //         color: 'black',
+    //       }}
+    //     >
+    //       {row.keterangan}
+    //     </div>
+    //   ),
+    //   width: '150px'
+    // },
+
   ];
 
   const conditionalRowStyles = [
@@ -218,25 +153,12 @@ const Absen = () => {
     }
   ];
 
-  // const showw = async () => {
-  //   const awal = new Date(tanggalawal).toISOString()
-  //   const akhir = new Date(tanggalakhir + 'T23:59:59.999Z').toISOString()
-  //   const xxx: any = dataawal.filter((item: any) => formattanggaljakarta(item.createdAt) >= awal && formattanggaljakarta(item.createdAt) <= akhir)
-  //   setDataAbsen(xxx);
-  // }
-
   const showw = async () => {
-    const awal = new Date(tanggalawal);
-    const akhir = new Date(tanggalakhir + 'T23:59:59.999Z');
-    const filteredData:any = dataawal.map((karyawan:any) => {
-      const filteredAbsensi = karyawan.AbsensiTb.filter((absen:any) => {
-        const absenDate = new Date(absen.createdAt);
-        return absenDate >= awal && absenDate <= akhir;
-      });
-      return { ...karyawan, AbsensiTb: filteredAbsensi };
-    }).filter(karyawan => karyawan.AbsensiTb.length > 0);
-    setDataAbsen(filteredData);
-  };
+    const awal = new Date(tanggalawal).toISOString()
+    const akhir = new Date(tanggalakhir + 'T23:59:59.999Z').toISOString()
+    const xxx: any = dataawal.filter((item: any) => formattanggaljakarta(item.createdAt) >= awal && formattanggaljakarta(item.createdAt) <= akhir)
+    setDataAbsen(xxx);
+  }
 
   const reset = () => {
     // reload()
@@ -248,79 +170,36 @@ const Absen = () => {
 
   const exportToExcelperKaryawan = () => {
 
-    // const dataToExport = filteredItems.map((item: any) => ({
-    //   Nama: item.KaryawanTb.nama,
-    //   Tanggal: ambiltanggalindo(item.createdAt),
-    //   Jam: ambiljamindo(item.createdAt),
-    //   Keterangan: item.keterangan,
-    //   bulan: moment(item.createdAt).format('MMMM YYYY')
-    // }));
-
-    // if (dataToExport.length === 0) {
-    //   console.error("No data to export");
-    //   return;
-    // }
-
-    // const worksheet = XLSX.utils.json_to_sheet(dataToExport);
-    // const workbook = XLSX.utils.book_new();
-    // const nama = dataToExport[0].Nama;
-    // const bulan = dataToExport[0].bulan;
-    // XLSX.utils.book_append_sheet(workbook, worksheet, `${nama}`);
-    // XLSX.writeFile(workbook, `Absen ${nama} ${bulan}.xlsx`);
-    const dataToExport = filteredItems.map((item:any) => {
-      return item.AbsensiTb.map((absen:any) => ({
-        Nama: item.nama,
-        Divisi: item.divisi,
-        'Tanggal Absensi': moment(absen.createdAt).format('DD MMM YYYY'),
-        'Jam Absensi': moment(absen.createdAt).format('HH:mm:ss'),
-        Keterangan: absen.keterangan,
-        bulan: moment(absen.createdAt).format('MMMM YYYY')
-      }));
-    }).flat();
+    const dataToExport = filteredItems.map((item: any) => ({
+      Nama: item.KaryawanTb.nama,
+      Tanggal: ambiltanggalindo(item.createdAt),
+      Jam: ambiljamindo(item.createdAt),
+      Keterangan: item.keterangan,
+      bulan: moment(item.createdAt).format('MMMM YYYY')
+    }));
 
     if (dataToExport.length === 0) {
       console.error("No data to export");
       return;
     }
-    const nama = dataToExport[0].Nama;
+
     const worksheet = XLSX.utils.json_to_sheet(dataToExport);
     const workbook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(workbook, worksheet, 'Absen Karyawan');
-    XLSX.writeFile(workbook, `Absen ${nama}.xlsx`);
+    const nama = dataToExport[0].Nama;
+    const bulan = dataToExport[0].bulan;
+    XLSX.utils.book_append_sheet(workbook, worksheet, `${nama}`);
+    XLSX.writeFile(workbook, `Absen ${nama} ${bulan}.xlsx`);
   };
 
-  // const exportToExcel = () => {
-
-  //   const dataToExport = filteredItems.map((item: any) => ({
-  //     Nama: item.KaryawanTb.nama,
-  //     Tanggal: ambiltanggalindo(item.createdAt),
-  //     Jam: ambiljamindo(item.createdAt),
-  //     Keterangan: item.keterangan,
-  //     bulan: moment(item.createdAt).format('MMMM YYYY')
-  //   }));
-
-  //   if (dataToExport.length === 0) {
-  //     console.error("No data to export");
-  //     return;
-  //   }
-
-  //   const worksheet = XLSX.utils.json_to_sheet(dataToExport);
-  //   const workbook = XLSX.utils.book_new();
-  //   const bulan = dataToExport[0].bulan;
-  //   XLSX.utils.book_append_sheet(workbook, worksheet, `Absen Karyawan`);
-  //   XLSX.writeFile(workbook, `Absen Karyawan ${bulan}.xlsx`);
-  // };
-
   const exportToExcel = () => {
-    const dataToExport = filteredItems.map((item:any) => {
-      return item.AbsensiTb.map((absen:any) => ({
-        Nama: item.nama,
-        Divisi: item.divisi,
-        'Tanggal Absensi': moment(absen.createdAt).format('DD MMM YYYY'),
-        'Jam Absensi': moment(absen.createdAt).format('HH:mm:ss'),
-        Keterangan: absen.keterangan,
-      }));
-    }).flat();
+
+    const dataToExport = filteredItems.map((item: any) => ({
+      Nama: item.KaryawanTb.nama,
+      Tanggal: ambiltanggalindo(item.createdAt),
+      Jam: ambiljamindo(item.createdAt),
+      Keterangan: item.keterangan,
+      bulan: moment(item.createdAt).format('MMMM YYYY')
+    }));
 
     if (dataToExport.length === 0) {
       console.error("No data to export");
@@ -329,8 +208,9 @@ const Absen = () => {
 
     const worksheet = XLSX.utils.json_to_sheet(dataToExport);
     const workbook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(workbook, worksheet, 'Absen Karyawan');
-    XLSX.writeFile(workbook, 'Absen_Karyawan.xlsx');
+    const bulan = dataToExport[0].bulan;
+    XLSX.utils.book_append_sheet(workbook, worksheet, `Absen Karyawan`);
+    XLSX.writeFile(workbook, `Absen Karyawan ${bulan}.xlsx`);
   };
 
   return (

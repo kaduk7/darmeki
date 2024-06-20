@@ -19,12 +19,12 @@ export const POST = async (request: Request) => {
 }
 
 export const GET = async () => {
-    const pengumuman = await prisma.absensiTb.findMany({
+    const pengumuman = await prisma.karyawanTb.findMany({
         orderBy: {
             id: "asc"
         },
         include:{
-            KaryawanTb:true
+            AbsensiTb:true
         }
     });
     return NextResponse.json({ pesan: 'berhasil', data: pengumuman })
