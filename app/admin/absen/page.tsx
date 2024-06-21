@@ -122,7 +122,7 @@ const Absen = () => {
       name: 'Nama',
       selector: (row: any) => row.nama,
       sortable: true,
-      width: '300px'
+      // width: '300px'
     },
     {
       name: 'Tanggal',
@@ -189,7 +189,7 @@ const Absen = () => {
         </div>
       ),
       sortable: false,
-      width: '400px'
+      // width: '400px'
     },
     
   ];
