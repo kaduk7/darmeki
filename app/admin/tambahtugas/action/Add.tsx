@@ -340,3 +340,4 @@ function Add({ reload, karyawan }: { reload: Function, karyawan: Array<any> }) {
 }
 
 export default Add
+
