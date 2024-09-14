@@ -235,6 +235,7 @@ function Update({ karyawan, hakAkses, reload }: { karyawan: KaryawanTb, hakAkses
                                     <option value={'PIC'}>PIC</option>
                                     <option value={'Logistik'}>Logistik</option>
                                     <option value={'Teknisi'}>Teknisi</option>
+                                    <option value={'Magang'}>Magang</option>
                                 </select>
                             </div>
                         </div>

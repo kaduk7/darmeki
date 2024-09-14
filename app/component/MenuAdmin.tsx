@@ -2,6 +2,7 @@ import Link from "next/link";
 import Buttonlogout from "./Buttonlogout";
 import { signOut } from "next-auth/react";
 import Swal from "sweetalert2";
+
 const tombol = () => {
     Swal.fire({
         title: "Anda Yakin..?",

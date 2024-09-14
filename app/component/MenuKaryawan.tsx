@@ -1,9 +1,27 @@
 import Link from "next/link";
 import Buttonlogout from "./Buttonlogout";
-import { useSession } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
+import Swal from "sweetalert2";
 
 export default function MenuKaryawan() {
     const session = useSession()
+    
+    function tombol() {
+        Swal.fire({
+            title: "Anda Yakin..?",
+            text: "Logout dari akun ini?",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Ya, logout sekarang!"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                signOut()
+            }
+        });
+    }
+    
     return (
         <div className="deznav">
             <div className="deznav-scroll">
@@ -214,7 +232,7 @@ export default function MenuKaryawan() {
                     </li> */}
                 </ul>
                 <div className="switch-btn">
-                    <Link href="">
+                    <Link href="" onClick={tombol} >
                         <svg
                             width={24}
                             height={24}
@@ -237,7 +255,7 @@ export default function MenuKaryawan() {
                                 strokeLinejoin="round"
                             />
                         </svg>
-                        <span><Buttonlogout /></span>
+                        <span className="nav-text">Logout</span>
                     </Link>
                 </div>
             </div>

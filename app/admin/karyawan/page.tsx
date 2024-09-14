@@ -20,7 +20,9 @@ const Karyawan = () => {
   const reload = async () => {
     try {
       const response = await fetch(`/admin/api/karyawan`);
+      console.log("isi respon",response)
       const result = await response.json();
+      console.log('isi result',result)
       setDatakaryawan(result);
     } catch (error) {
       console.error('Error fetching data:', error);
