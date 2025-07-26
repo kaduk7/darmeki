@@ -10,45 +10,32 @@ export const POST = async (request: Request) => {
 
     const formData = await request.formData()
 
-    await prisma.karyawanTb.create({
+    await prisma.unitTb.create({
         data: {
             nama: String(formData.get('nama')),
-            hp: String(formData.get('hp')),
-            email: String(formData.get('email')),
-            divisi: String(formData.get('divisi')),
+            usernama: String(formData.get('usernama')),
+            petugas: String(formData.get('petugas')),
             UserTb: {
                 create: {
-                    usernama: String(formData.get('email')),
+                    usernama: String(formData.get('usernama')),
                     password: await bcrypt.hash(String(formData.get('password')), 10),
-                    status: String(formData.get('divisi'))
+                    status: String(formData.get('petugas'))
                 }
             },
-            HakAksesTb: {
-                create: {
-                    datakaryawan: String(formData.get('karyawanCekValue')),
-                    informasi: String(formData.get('informasiCekValue')),
-                    jobdesk: String(formData.get('jobdeskCekValue')),
-                }
-            },
+           
         },
         include: {
             UserTb: true
         }
     })
-    await prisma.profilTb.create({
-        data:{
-            
-        }
-    })
+   
     return NextResponse.json({ pesan: 'berhasil' })
 
 }
 
 export const GET = async () => {
     const karyawan = await prisma.karyawanTb.findMany({
-        include: {
-            HakAksesTb: true,
-        },
+        
         orderBy: {
             id: "asc"
         }

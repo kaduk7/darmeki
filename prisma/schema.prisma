@@ -3,172 +3,74 @@ generator client {
 }
 
 datasource db {
-  provider  = "postgresql"
-  url       = env("POSTGRES_PRISMA_URL")
-  directUrl = env("POSTGRES_URL_NON_POOLING")
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
 
 model KaryawanTb {
-  id               Int                @id @default(autoincrement())
-  nama             String
-  tempatLahir      String?
-  tanggalLahir     DateTime?
-  alamat           String?
-  hp               String             @unique
-  email            String             @unique
-  divisi           String
-  foto             String?
-  ktp              String?
-  CV               String?
-  ijazah           String?
-  createdAt        DateTime           @default(now())
-  updatedAt        DateTime           @updatedAt
-  AbsensiTb        AbsensiTb[]
-  BeritaTb         BeritaTb[]
-  HakAksesTb       HakAksesTb?
-  JobdeskTb        JobdeskTb[]
-  KomentarTb       KomentarTb[]
-  peminjamanTb     PeminjamanTb[]
-  RequestJobdeskTb RequestJobdeskTb[]
-  UserTb           UserTb?
-}
-
-model JobdeskTb {
-  id                 Int        @id @default(autoincrement())
-  karyawanId         Int
-  namaJob            String
-  keterangan         String
-  tanggalMulai       DateTime
-  deadline           DateTime
-  team               String
-  namaTeam           String
-  status             String
-  suratTugas         String
-  beritaAcara        String
-  laporanAnggaran    String
-  tanggalPelaksanaan DateTime?
-  file               String?
-  alasan             String?
-  keteranganAkhir    String?
-  createdAt          DateTime   @default(now())
-  updatedAt          DateTime   @updatedAt
-  KaryawanTb         KaryawanTb @relation(fields: [karyawanId], references: [id], onDelete: Cascade)
-}
-
-model RequestJobdeskTb {
-  id           Int        @id @default(autoincrement())
-  karyawanId   Int
-  namaJob      String
-  keterangan   String
-  tanggalMulai DateTime
-  deadline     DateTime
-  status       String
-  team         String
-  namaTeam     String
-  alasan       String?
-  createdAt    DateTime   @default(now())
-  updatedAt    DateTime   @updatedAt
-  KaryawanTb   KaryawanTb @relation(fields: [karyawanId], references: [id], onDelete: Cascade)
-}
-
-model BeritaTb {
-  id            Int          @id @default(autoincrement())
-  judul         String
-  tanggalBerita DateTime
-  isi           String
+  id            Int             @id @default(autoincrement())
+  NIP           String
+  nama          String
+  tempatLahir   String?
+  tanggalLahir  DateTime?
+  alamat        String?
+  hp            String          @unique
+  email         String          @unique
   foto          String?
-  karyawanId    Int
-  createdAt     DateTime     @default(now())
-  updatedAt     DateTime     @updatedAt
-  KaryawanTb    KaryawanTb   @relation(fields: [karyawanId], references: [id], onDelete: Cascade)
-  KomentarTb    KomentarTb[]
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+  DetailKerjaTb DetailKerjaTb[]
 }
 
-model KomentarTb {
+model UnitTb {
+  id        Int       @id @default(autoincrement())
+  nama      String
+  usernama  String    @unique
+  foto      String?
+  petugas   String
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  KerjaTb   KerjaTb[]
+  UserTb    UserTb?
+}
+
+model KerjaTb {
+  id                   Int             @id @default(autoincrement())
+  unitId               Int
+  tanggal              DateTime
+  shift                String
+  totallaporangangguan Int
+  totalwoplnmobile     Int
+  woselesai            Int
+  wobelumselesai       Int
+  jumlahp0             Int
+  pemakaianmaterial    String
+  foto                 String?
+  createdAt            DateTime        @default(now())
+  updatedAt            DateTime        @updatedAt
+  UnitTb               UnitTb          @relation(fields: [unitId], references: [id], onDelete: Cascade)
+  DetailKerjaTb        DetailKerjaTb[]
+}
+
+model DetailKerjaTb {
   id         Int        @id @default(autoincrement())
-  beritaId   Int
   karyawanId Int
-  isi        String
+  kerjaId    Int
   createdAt  DateTime   @default(now())
   updatedAt  DateTime   @updatedAt
-  BeritaTb   BeritaTb   @relation(fields: [beritaId], references: [id], onDelete: Cascade)
   KaryawanTb KaryawanTb @relation(fields: [karyawanId], references: [id], onDelete: Cascade)
-}
-
-model PengumumanTb {
-  id                Int      @id @default(autoincrement())
-  judul             String
-  tanggalPengumuman DateTime
-  isi               String
-  divisi            String
-  foto              String?
-  createdAt         DateTime @default(now())
-  updatedAt         DateTime @updatedAt
+  KerjaTb    KerjaTb    @relation(fields: [kerjaId], references: [id], onDelete: Cascade)
 }
 
 model UserTb {
-  id         Int        @id @default(autoincrement())
-  karyawanId Int        @unique
-  usernama   String     @unique
-  password   String
-  status     String
-  createdAt  DateTime   @default(now())
-  updatedAt  DateTime   @updatedAt
-  KaryawanTb KaryawanTb @relation(fields: [karyawanId], references: [id], onDelete: Cascade)
-}
-
-model HakAksesTb {
-  id           Int        @id @default(autoincrement())
-  karyawanId   Int        @unique
-  datakaryawan String
-  informasi    String
-  jobdesk      String
-  createdAt    DateTime   @default(now())
-  updatedAt    DateTime   @updatedAt
-  KaryawanTb   KaryawanTb @relation(fields: [karyawanId], references: [id], onDelete: Cascade)
-}
-
-model Inventaris {
-  id             Int              @id @default(autoincrement())
-  kodeBarang     String           @unique
-  nama           String
-  merek          String
-  stok           Int
-  createdAt      DateTime         @default(now())
-  updatedAt      DateTime         @updatedAt
-  detailPinjamTb DetailPinjamTb[]
-}
-
-model PeminjamanTb {
-  id             Int              @id @default(autoincrement())
-  karyawanId     Int
-  tanggal        DateTime
-  total          Int
-  status         String
-  createdAt      DateTime         @default(now())
-  updatedAt      DateTime         @updatedAt
-  detailPinjamTb DetailPinjamTb[]
-  KaryawanTb     KaryawanTb       @relation(fields: [karyawanId], references: [id], onDelete: Cascade)
-}
-
-model DetailPinjamTb {
-  id           Int          @id @default(autoincrement())
-  peminjamanId Int
-  inventarisId Int
-  qty          Int
-  createdAt    DateTime     @default(now())
-  updatedAt    DateTime     @updatedAt
-  inventaris   Inventaris   @relation(fields: [inventarisId], references: [id], onDelete: Cascade)
-  peminjamanTb PeminjamanTb @relation(fields: [peminjamanId], references: [id], onDelete: Cascade)
-}
-
-model AbsensiTb {
-  id         Int        @id @default(autoincrement())
-  karyawanId Int
-  keterangan String
-  createdAt  DateTime   @default(now())
-  updatedAt  DateTime   @updatedAt
-  KaryawanTb KaryawanTb @relation(fields: [karyawanId], references: [id], onDelete: Cascade)
+  id        Int      @id @default(autoincrement())
+  unitId    Int      @unique
+  usernama  String   @unique
+  password  String
+  status    String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  UnitTb    UnitTb   @relation(fields: [unitId], references: [id], onDelete: Cascade)
 }
 
 model SlideTb {
