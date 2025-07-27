@@ -6,8 +6,8 @@ import 'moment-timezone'
 
 const currentTime = new Date();
 
-export let supabaseUrl = 'https://harkcrbmtskvtiboutxl.supabase.co'
-export let supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhhcmtjcmJtdHNrdnRpYm91dHhsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTczODY4MTgsImV4cCI6MjAzMjk2MjgxOH0.Oa2dnHnpsJbQviB4fNdIdwSxJgYR8BUS-Nd1VQWg7LY'
+export let supabaseUrl = 'https://ycoborgturhziuqptdzn.supabase.co'
+export let supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inljb2Jvcmd0dXJoeml1cXB0ZHpuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTM1NDI3ODAsImV4cCI6MjA2OTExODc4MH0.ry6dc3-5h7sfDqkTahmwKtHg4u7COjYKQqGDZsbrZUY'
 export let supabaseBUCKET = 'uploadfile'
 export const supabase = createClient(supabaseUrl, supabaseKey)
 
