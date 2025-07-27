@@ -6,10 +6,7 @@ import Menuadmin from './MenuAdmin';
 import ScriptJs from './ScriptJs';
 import Header from './Header';
 import { useSession } from 'next-auth/react';
-import MenuMarketing from './MenuMarketing';
-import MenuPIC from './MenuPIC';
-import MenuTeknisi from './MenuTeknisi';
-import MenuLogistik from './MenuLogistik';
+
 
 function Template({ children }: { children: React.ReactNode }) {
     const session = useSession()
@@ -23,11 +20,7 @@ function Template({ children }: { children: React.ReactNode }) {
             </div>
             <div id="main-wrapper">
                 <Header />
-                {session?.data?.status === 'Admin' ? <Menuadmin /> :
-                    session?.data?.status === 'Marketing' ? <MenuMarketing /> :
-                        session?.data?.status === 'PIC' ? <MenuPIC /> :
-                            session?.data?.status === 'Logistik' ? <MenuLogistik /> :
-                                session?.data?.status === 'Teknisi' ? <MenuTeknisi /> : null}
+                {session?.data?.status === 'Admin' ? <Menuadmin />  : null}
 
                 <div className="outer-body">
                     <div className="inner-body">
