@@ -17,7 +17,7 @@ export const POST = async (request: Request) => {
             },
         },
         include: {
-            KaryawanTb: true,
+            UnitTb: true,
         }
     });
 
