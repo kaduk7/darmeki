@@ -62,7 +62,16 @@ export default function MenuAdmin() {
                         <ul aria-expanded="false" id="master">
                             <li className="mini-dashboard">Master Data</li>
                             <li>
+                                <Link href="/admin/ul">Unit Layanan</Link>
+                            </li>
+                            <li>
                                 <Link href="/admin/karyawan">Data Karyawan</Link>
+                            </li>
+                            <li>
+                                <Link href="/admin/unit">Data Unit</Link>
+                            </li>
+                            <li>
+                                <Link href="/admin/areakerja">UL Karyawan</Link>
                             </li>
                         </ul>
                     </li>

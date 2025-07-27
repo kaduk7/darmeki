@@ -47,6 +47,7 @@ export const PATCH = async (request: Request, { params }: { params: { id: string
             hp: String(formData.get('hp')),
             email: String(formData.get('email')),
             NIP: String(formData.get('NIP')),
+            jekel: String(formData.get('jekel')),
         }
     })
 

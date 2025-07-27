@@ -32,6 +32,7 @@ export const PATCH = async (request: Request, { params }: { params: { id: string
             },
             data: {
                 nama: String(formData.get('nama')),
+                ULId: Number(formData.get('UL')),
                 usernama: String(formData.get('usernama')),
                 petugas: String(formData.get('petugas')),
                 UserTb: {
@@ -78,11 +79,11 @@ export const PATCH = async (request: Request, { params }: { params: { id: string
 // }
 
 export const DELETE = async (request: Request, { params }: { params: { id: string } }) => {
-        const karyawan = await prisma.unitTb.delete({
+        const unit = await prisma.unitTb.delete({
             where: {
                 id: Number(params.id)
             }
         })
-        return NextResponse.json(karyawan, { status: 200 })
+        return NextResponse.json(unit, { status: 200 })
 
 }

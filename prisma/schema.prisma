@@ -11,6 +11,7 @@ model KaryawanTb {
   id            Int             @id @default(autoincrement())
   NIP           String
   nama          String
+  jekel         String
   tempatLahir   String?
   tanggalLahir  DateTime?
   alamat        String?
@@ -20,11 +21,34 @@ model KaryawanTb {
   createdAt     DateTime        @default(now())
   updatedAt     DateTime        @updatedAt
   DetailKerjaTb DetailKerjaTb[]
+  AreakerjaTb   AreakerjaTb[]
+}
+
+model ULTb {
+  id        Int      @id @default(autoincrement())
+  nama      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  UnitTb      UnitTb[]
+  AreakerjaTb AreakerjaTb[]
+}
+
+model AreakerjaTb {
+  id         Int      @id @default(autoincrement())
+  karyawanId Int
+  ulId       Int
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  ULTb       ULTb       @relation(fields: [ulId], references: [id], onDelete: Cascade)
+  KaryawanTb KaryawanTb @relation(fields: [karyawanId], references: [id], onDelete: Cascade)
 }
 
 model UnitTb {
   id        Int       @id @default(autoincrement())
   nama      String
+  ULId      Int
   usernama  String    @unique
   foto      String?
   petugas   String
@@ -32,6 +56,7 @@ model UnitTb {
   updatedAt DateTime  @updatedAt
   KerjaTb   KerjaTb[]
   UserTb    UserTb?
+  ULTb      ULTb      @relation(fields: [ULId], references: [id], onDelete: Cascade)
 }
 
 model KerjaTb {

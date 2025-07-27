@@ -4,7 +4,6 @@ import DataTable from 'react-data-table-component';
 import Add from './action/Add';
 import Update from './action/Update';
 import Delete from './action/Delete';
-import Cek from './action/Cek';
 import * as XLSX from 'xlsx';
 
 const Karyawan = () => {
@@ -52,21 +51,20 @@ const Karyawan = () => {
       width: '420px'
     },
     {
+      name: 'NIP',
+      selector: (row: any) => row.NIP,
+    },
+    {
       name: 'No Hp',
       selector: (row: any) => row.hp,
       width: '150px'
     },
     {
-      name: 'Divisi',
-      selector: (row: any) => row.divisi,
-    },
-    {
       name: 'Action',
       cell: (row: any) => (
         <div className="d-flex">
-          <Update reload={reload} karyawan={row} hakAkses={row.HakAksesTb}/>
+          <Update reload={reload} karyawan={row}/>
           <Delete reload={reload} karyawanId={row.id} />
-          <Cek karyawan={row}/>
         </div>
       ),
     },

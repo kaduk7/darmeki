@@ -1,6 +1,6 @@
 
 export const metadata = {
-    title: "Tambah Tugas",
+    title: "Unit Layanan",
 }
 
 function LayoutKategori({ children }: { children: React.ReactNode }) {

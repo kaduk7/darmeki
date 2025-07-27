@@ -43,47 +43,7 @@ export async function middleware(request: NextRequest) {
     }
   }
   
-  if (pathname.startsWith("/admin/karyawan")) {
-    if (token?.hakAksesDatakaryawan !== "Ya") {
-      const url = new URL('/', request.url);
-      return NextResponse.redirect(url);
-    }
-  }
-
-  if (pathname.startsWith("/admin/divisi")) {
-    if (token?.hakAksesDatakaryawan !== "Ya") {
-      const url = new URL('/', request.url);
-      return NextResponse.redirect(url);
-    }
-  }
-
-  if (pathname.startsWith("/admin/tambahjobdesk")) {
-    if (token?.hakAksesJobdesk !== "Ya") {
-      const url = new URL('/', request.url);
-      return NextResponse.redirect(url);
-    }
-  }
-
-  if (pathname.startsWith("/admin/pengajuanjobdesk")) {
-    if (token?.hakAksesJobdesk !== "Ya") {
-      const url = new URL('/', request.url);
-      return NextResponse.redirect(url);
-    }
-  }
   
-  if (pathname.startsWith("/admin/pengajuanjobdesk")) {
-    if (token?.hakAksesJobdesk !== "Ya") {
-      const url = new URL('/', request.url);
-      return NextResponse.redirect(url);
-    }
-  }
-
-  if (pathname.startsWith("/admin/berita")) {
-    if (token?.hakAksesInformasi !== "Ya") {
-      const url = new URL('/', request.url);
-      return NextResponse.redirect(url);
-    }
-  }
 
   return res;
 }

@@ -8,7 +8,7 @@ import axios from "axios";
 import { tanggalIndo } from "@/app/helper";
 
 
-const Pengumuman = () => {
+const Superadmin = () => {
   const [datakaryawan, setDatakaryawan] = useState([])
   const [selectdivisi, setSelectdivisi] = useState([])
   const [filterText, setFilterText] = React.useState('');
@@ -63,7 +63,7 @@ const Pengumuman = () => {
         <div className="col-md-12 grid-margin stretch-card">
           <div className="card">
             <div className="card-header">
-              <h1 className="card-title">Data Pengumuman</h1>
+              <h1 className="card-title">Data User</h1>
             </div>
             <div className="card-body">
               <div className="row mb-3">
@@ -113,4 +113,4 @@ const Pengumuman = () => {
   )
 }
 
-export default Pengumuman
+export default Superadmin

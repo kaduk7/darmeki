@@ -5,13 +5,12 @@ import { useRouter } from "next/navigation"
 import Modal from 'react-bootstrap/Modal';
 import Swal from "sweetalert2";
 
-function Delete({ jobdeskId, reload }: { jobdeskId: Number, reload: Function }) {
+
+function Delete({ unitId, reload }: { unitId: Number, reload: Function }) {
     const [show, setShow] = useState(false);
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
-
     const router = useRouter()
-
     const [isLoading, setIsLoading] = useState(false)
 
     if (isLoading) {
@@ -25,12 +24,12 @@ function Delete({ jobdeskId, reload }: { jobdeskId: Number, reload: Function }) 
         })
     }
 
-    const handleDelete = async (jobdeskId: number) => {
+    const handleDelete = async (unitId: number) => {
         setIsLoading(true)
         handleClose()
-        await axios.delete(`/admin/api/verifikasi/${jobdeskId}`)
-
+        await axios.delete(`/admin/api/unit/${unitId}`)
         setTimeout(function () {
+            setIsLoading(false)
             Swal.fire({
                 position: 'top-end',
                 icon: 'success',
@@ -38,8 +37,10 @@ function Delete({ jobdeskId, reload }: { jobdeskId: Number, reload: Function }) 
                 showConfirmButton: false,
                 timer: 1500
             })
-            setIsLoading(false)
             reload()
+            setTimeout(function () {
+                router.refresh()
+            }, 1500);
         }, 1500);
     }
 
@@ -53,11 +54,11 @@ function Delete({ jobdeskId, reload }: { jobdeskId: Number, reload: Function }) 
                 backdrop="static"
                 keyboard={false}>
                 <Modal.Body>
-                    <h6 className="font-bold" style={{ color: "black" }}>Anda jakin menghapus data ini ?</h6>
+                    <h6 className="font-bold" style={{ color: "black" }}>Anda yakin menghapus data ini ?</h6>
                 </Modal.Body>
                 <Modal.Footer>
                     <button type="button" className="btn btn-warning light" onClick={handleClose}>Close</button>
-                    <button type="button" className="btn btn-danger light" onClick={() => handleDelete(Number(jobdeskId))}>Ya, Hapus</button>
+                    <button type="button" className="btn btn-danger light" onClick={() => handleDelete(Number(unitId))}>Ya, Hapus</button>
                 </Modal.Footer>
             </Modal>
         </>

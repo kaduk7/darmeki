@@ -1,25 +1,41 @@
 "use client"
-import Cek from "./action/Cek";
-import React, { useState, useEffect } from 'react';
-import { Pagination, Badge } from 'react-bootstrap';
-import { warnastatus } from "@/app/helper";
-import * as XLSX from 'xlsx';
+import React, { useEffect, useState } from 'react';
 import DataTable from 'react-data-table-component';
+import Add from './action/Add';
+import Update from './action/Update';
+import Delete from './action/Delete';
+import * as XLSX from 'xlsx';
 
-const TambahJobdesk = () => {
-  const [datajobdesk, setDatajobdesk] = useState([])
+const Unit = () => {
+  const [dataunit, setDataunit] = useState([])
+  const [dataul, setDataul] = useState([])
   const [filterText, setFilterText] = React.useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(5);
 
   useEffect(() => {
     reload()
+    getulay()
   }, [])
 
   const reload = async () => {
-    const response = await fetch(`/admin/api/tambahtugas`);
-    const result = await response.json();
-    setDatajobdesk(result);
+    try {
+      const response = await fetch(`/admin/api/unit`);
+      const result = await response.json();
+      setDataunit(result);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+  }
+
+  const getulay = async () => {
+    try {
+      const response = await fetch(`/admin/api/ul`);
+      const result = await response.json();
+      setDataul(result);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
   }
 
   const handleRowsPerPageChange = (newPerPage: number, page: number) => {
@@ -27,8 +43,8 @@ const TambahJobdesk = () => {
     setCurrentPage(page);
   };
 
-  const filteredItems = datajobdesk.filter(
-    (item: any) => item.namaJob && item.namaJob.toLowerCase().includes(filterText.toLowerCase()),
+  const filteredItems = dataunit.filter(
+    (item: any) => item.nama && item.nama.toLowerCase().includes(filterText.toLowerCase()),
   );
 
   const columns = [
@@ -39,40 +55,28 @@ const TambahJobdesk = () => {
       width: '80px'
     },
     {
-      name: 'Nama Karyawan',
-      selector: (row: any) => row.KaryawanTb.nama,
+      name: 'Nama',
+      selector: (row: any) => row.nama,
       sortable: true,
-      width: '320px'
+      width: '300px'
     },
     {
-      name: 'Nama Tugas',
-      selector: (row: any) => row.namaJob,
+      name: 'Unit Layanan',
+      selector: (row: any) => row.ULTb.nama,
+      width: '270px'
     },
     {
-      name: 'Status',
-      selector: (row: any) => row.status,
-      cell: (row:any) => (
-        <div
-          style={{
-            backgroundColor: warnastatus(row.status),
-            padding: '8px',
-            borderRadius: '4px',
-            color: 'black',
-          }}
-        >
-          {row.status}
-        </div>
-      ),
-      width: '150px'
+      name: 'Petugas',
+      selector: (row: any) => row.petugas,
     },
     {
       name: 'Action',
       cell: (row: any) => (
         <div className="d-flex">
-          <Cek jobdesk={row} findkaryawan={row.KaryawanTb} />
+          <Update reload={reload} unit={row} dataulay={dataul}/>
+          <Delete reload={reload} unitId={row.id} />
         </div>
       ),
-      width: '150px'
     },
 
   ];
@@ -90,12 +94,12 @@ const TambahJobdesk = () => {
         <div className="col-md-12 grid-margin stretch-card">
           <div className="card">
             <div className="card-header">
-              <h1 className="card-title">Semua Tugas</h1>
+              <h1 className="card-title" >Data Unit</h1>
             </div>
             <div className="card-body">
               <div className="row mb-3">
                 <div className="col-md-9">
-                 
+                  <Add reload={reload} dataulay={dataul} />
                 </div>
                 <div className="col-md-3">
                   <div className="input-group mb-3  input-success">
@@ -132,25 +136,36 @@ const TambahJobdesk = () => {
                   },
                 }}
               />
-              {datajobdesk.length > 0 ?
+              {/* {dataunit.length > 0 ?
                 <div className="row mb-3">
                   <div className="col-md-3">
                     <button type='button' onClick={exportToExcel} className="btn btn-success btn-icon-text">
                       Ekspor ke Excel
                     </button>
                   </div>
-                 
+                  <div className="col-md-9 d-flex justify-content-end">
+                    <li>
+                      <button type='button' onClick={exportToExcel} className="btn btn-primary btn-icon-text mx-2">
+                        Download Template
+                      </button>
+                    </li>
+                    <li>
+                      <button type='button' onClick={exportToExcel} className="btn btn-info btn-icon-text">
+                        Import dari Excel
+                      </button>
+                    </li>
+                  </div>
 
                 </div>
                 :
                 null
-              }
+              } */}
             </div>
           </div>
         </div>
       </div >
     </div >
   )
-}
+};
 
-export default TambahJobdesk
+export default Unit;

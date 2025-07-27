@@ -36,10 +36,8 @@ export const authOptions: NextAuthOptions = {
             usernama: credentials.usernama
           },
           include: {
-            KaryawanTb: {
-              include: {
-                HakAksesTb: true,
-              }
+            UnitTb: {
+              
             },
 
           }
@@ -62,14 +60,11 @@ export const authOptions: NextAuthOptions = {
         return {
           id: user.id + '',
           usernama: user.usernama,
-          nama: user.KaryawanTb.nama,
-          karyawanId: user.karyawanId,
+          nama: user.UnitTb.nama,
+          unitId: user.unitId,
           status: user.status,
-          hp: user.KaryawanTb.hp,
-          divisi: user.KaryawanTb.divisi,
-          hakAksesDatakaryawan: user.KaryawanTb?.HakAksesTb?.datakaryawan,
-          hakAksesInformasi: user.KaryawanTb?.HakAksesTb?.informasi,
-          hakAksesJobdesk: user.KaryawanTb?.HakAksesTb?.jobdesk,
+          // divisi: user.KaryawanTb.divisi,
+
         } as any;
       }
     })

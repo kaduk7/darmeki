@@ -1,40 +1,25 @@
 "use client"
-import Add from "./action/Add"
-import Update from "./action/Update"
-import Delete from "./action/Delete"
-import Cek from "./action/Cek";
-import React, { useState, useEffect } from 'react';
-import { warnastatus } from "@/app/helper";
-import * as XLSX from 'xlsx';
+import React, { useEffect, useState } from 'react';
 import DataTable from 'react-data-table-component';
+import Add from './action/Add';
+import Update from './action/Update';
+import Delete from './action/Delete';
 
-const TambahJobdesk = () => {
-  const [datajobdesk, setDatajobdesk] = useState([])
-  const [datakaryawan, setDatakaryawan] = useState([])
-  const [filterText, setFilterText] = React.useState('');
+const Zona = () => {
+  const [dataul, setDataul] = useState([])
+  const [filterText, setFilterText] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(5);
 
   useEffect(() => {
     reload()
-    karyawan()
   }, [])
 
   const reload = async () => {
     try {
-      const response = await fetch(`/admin/api/tambahtugas`);
+      const response = await fetch(`/admin/api/ul`);
       const result = await response.json();
-      setDatajobdesk(result);
-    } catch (error) {
-      console.error('Error fetching data:', error);
-    }
-  }
-
-  const karyawan = async () => {
-    try {
-      const response = await fetch(`/admin/api/karyawan`);
-      const result = await response.json();
-      setDatakaryawan(result);
+      setDataul(result);
     } catch (error) {
       console.error('Error fetching data:', error);
     }
@@ -45,8 +30,8 @@ const TambahJobdesk = () => {
     setCurrentPage(page);
   };
 
-  const filteredItems = datajobdesk.filter(
-    (item: any) => item.namaJob && item.namaJob.toLowerCase().includes(filterText.toLowerCase()),
+  const filteredItems = dataul.filter(
+    (item: any) => item.nama && item.nama.toLowerCase().includes(filterText.toLowerCase()),
   );
 
   const columns = [
@@ -57,52 +42,21 @@ const TambahJobdesk = () => {
       width: '80px'
     },
     {
-      name: 'Nama Karyawan',
-      selector: (row: any) => row.KaryawanTb.nama,
+      name: 'Nama Unit Layanan',
+      selector: (row: any) => row.nama,
       sortable: true,
-      width: '320px'
-    },
-    {
-      name: 'Nama Tugas',
-      selector: (row: any) => row.namaJob,
-    },
-    {
-      name: 'Status',
-      selector: (row: any) => row.status,
-      cell: (row: any) => (
-        <div
-          style={{
-            backgroundColor: warnastatus(row.status),
-            padding: '8px',
-            borderRadius: '4px',
-            color: 'black',
-          }}
-        >
-          {row.status}
-        </div>
-      ),
-      width: '150px'
     },
     {
       name: 'Action',
       cell: (row: any) => (
         <div className="d-flex">
-          <Update reload={reload} jobdesk={row} karyawanTb={row.KaryawanTb} karyawan={datakaryawan} />
-          <Delete reload={reload} jobdeskId={row.id} jobdesk={row} />
-          <Cek jobdesk={row} findkaryawan={row.KaryawanTb} />
+          <Update reload={reload} ul={row} />
+          <Delete reload={reload} ulId={row.id} />
         </div>
       ),
-      width: '200px'
+      width: '150px'
     },
-
   ];
-
-  const exportToExcel = () => {
-    const worksheet = XLSX.utils.json_to_sheet(filteredItems);
-    const workbook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(workbook, worksheet, 'DataKaryawan');
-    XLSX.writeFile(workbook, 'Data Karyawan.xlsx');
-  };
 
   return (
     <div>
@@ -110,12 +64,12 @@ const TambahJobdesk = () => {
         <div className="col-md-12 grid-margin stretch-card">
           <div className="card">
             <div className="card-header">
-              <h1 className="card-title">Data Tugas</h1>
+              <h1 className="card-title">Data Unit Layanan</h1>
             </div>
             <div className="card-body">
               <div className="row mb-3">
                 <div className="col-md-9">
-                  <Add reload={reload} karyawan={datakaryawan} />
+                  <Add reload={reload} />
                 </div>
                 <div className="col-md-3">
                   <div className="input-group mb-3  input-success">
@@ -147,24 +101,10 @@ const TambahJobdesk = () => {
                   headRow: {
                     style: {
                       backgroundColor: '#53d0b2',
-                      fontSize: 15,
                     },
                   },
                 }}
               />
-              {datajobdesk.length > 0 ?
-                <div className="row mb-3">
-                  <div className="col-md-3">
-                    <button type='button' onClick={exportToExcel} className="btn btn-success btn-icon-text">
-                      Ekspor ke Excel
-                    </button>
-                  </div>
-
-
-                </div>
-                :
-                null
-              }
             </div>
           </div>
         </div>
@@ -173,4 +113,4 @@ const TambahJobdesk = () => {
   )
 }
 
-export default TambahJobdesk
+export default Zona

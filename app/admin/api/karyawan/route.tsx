@@ -37,6 +37,7 @@ export const POST = async (request: Request) => {
             hp: String(formData.get('hp')),
             email: String(formData.get('email')),
             NIP: String(formData.get('NIP')),
+            jekel: String(formData.get('jekel')),
 
         },
     })

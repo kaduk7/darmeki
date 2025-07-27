@@ -95,7 +95,7 @@ const Login = () => {
                       {/* <label className="mb-1 text-dark">Username</label> */}
                       <input
                         required
-                        type="email"
+                        type="text"
                         className="form-control form-control"
                         onChange={(e) => setUsernama(e.target.value)}
                         placeholder="Username"
