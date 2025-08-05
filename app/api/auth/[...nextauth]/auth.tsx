@@ -31,9 +31,14 @@ export const authOptions: NextAuthOptions = {
           return null
         }
 
-        const user = await prisma.userTb.findUnique({
+        const user = await prisma.userTb.findFirst({
           where: {
-            usernama: credentials.usernama
+            usernama: 
+            {
+                contains: credentials.usernama,
+                mode: 'insensitive'
+            },
+            
           },
           include: {
             UnitTb: {
